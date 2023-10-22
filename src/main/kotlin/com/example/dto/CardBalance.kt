@@ -40,7 +40,6 @@ data class CardBalanceResponseDTO(
     val balance: Double,
 )
 
-
 @Serializable
 data class CardWithdrawCashResponseDTO(
     val cardNumber: Long,

@@ -18,22 +18,6 @@ val cardStore = mapOf<Long, Card>(
 
 fun Application.configureRouting() {
     routing {
-        get("/") {
-            call.respondText("Hello World! ${cardStore.get(1111_1111_1111_1111)}")
-        }
-        get("/balance/{id}") {
-            val cardNumber = call.parameters["id"]?.toLong()
-            // if no id rerun empty
-            val card = cardStore.get(cardNumber)
-            val balance = CardBalance(
-                firstName = card!!.firstName,
-                lastName = card!!.lastName,
-                cardNumber = card!!.id,
-                balance = card!!.balance,
-            )
-            println(balance)
-            call.respond(balance)
-        }
         post("/card-detail") {
             // Test with:
             // curl -d '{"id":"1111111111111111", "pin":"1234"}' -H "Content-Type: application/json" -X POST http://0.0.0.0:8080/card-detail -v
@@ -44,9 +28,9 @@ fun Application.configureRouting() {
             if (!isValid) {
                 call.respond(HttpStatusCode.Unauthorized, ErrorCardResponseDTO("Invalid PIN or CardID."))
             }
+            val card: Card = cardStore[cardRequest.id]!!
             if (isValid) {
-                val card: Card? = cardStore[cardRequest.id]
-                val cardDetailResponse = CardDetailResponseDTO(card!!.id, card!!.firstName, card!!.lastName)
+                val cardDetailResponse = CardDetailResponseDTO(card.id, card.firstName, card.lastName)
                 call.respond(HttpStatusCode.OK, cardDetailResponse)
             }
         }
@@ -60,9 +44,9 @@ fun Application.configureRouting() {
             if (!isValid) {
                 call.respond(HttpStatusCode.Unauthorized, ErrorCardResponseDTO("Invalid PIN or CardID."))
             }
+            val card: Card = cardStore[cardRequest.id]!!
             if (isValid) {
-                val card: Card? = cardStore[cardRequest.id]
-                val cardBalanceResponse = CardBalanceResponseDTO(card!!.id, card!!.balance)
+                val cardBalanceResponse = CardBalanceResponseDTO(card.id, card.balance)
                 call.respond(HttpStatusCode.OK, cardBalanceResponse)
             }
         }
