@@ -8,3 +8,9 @@ data class CardBalance(
     val cardNumber: Long,
     val balance: Double,
 )
+
+@Serializable
+data class CardDetailRequestDTO(
+    val id: Long,
+    val pin: Int,
+)

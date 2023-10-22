@@ -1,17 +1,19 @@
 package com.example.plugins
 
-import com.example.models.Card
 import com.example.dto.CardBalance
+import com.example.dto.CardDetailRequestDTO
+import com.example.models.Card
+import com.example.services.isCardPinValid
+import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-
 val cardStore = mapOf<Long, Card>(
-    1111_1111_1111_1111 to Card(id = 1111_1111_1111_1111, pin = 1234, firstName="Jane", lastName="Doe", balance = 300.0),
-    2222_2222_2222_2222 to Card(id = 2222_2222_2222_2222, pin = 1234, firstName="John", lastName="Doe", balance = 200.0),
+    1111_1111_1111_1111 to Card(id = 1111_1111_1111_1111, pin = 1234, firstName = "Jane", lastName = "Doe", balance = 300.0),
+    2222_2222_2222_2222 to Card(id = 2222_2222_2222_2222, pin = 1234, firstName = "John", lastName = "Doe", balance = 200.0),
 )
-
 
 fun Application.configureRouting() {
     routing {
@@ -30,6 +32,12 @@ fun Application.configureRouting() {
             )
             println(balance)
             call.respond(balance)
+        }
+        post("/card-detail") {
+            // curl -d '{"id":"1111111111111111", "pin":"1234"}' -H "Content-Type: application/json" -X POST http://0.0.0.0:8080/card-detail
+            val cardDetailRequest = call.receive<CardDetailRequestDTO>()
+            val isValid = isCardPinValid(cardDetailRequest.id, cardDetailRequest.pin, cardStore)
+            call.respondText("Is Valid: $isValid", status = HttpStatusCode.Created)
         }
     }
 }
