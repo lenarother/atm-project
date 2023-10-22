@@ -1,44 +1,31 @@
 package com.example.plugins
 
 import com.example.models.Card
-import com.example.models.Customer
-import com.example.dto.CustomerBalance
+import com.example.dto.CardBalance
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-val customerStore = mapOf(
-    1 to Customer(id = 1, firstName = "Magda", lastName = "Rother"),
-    2 to Customer(id = 2, firstName = "Uche", lastName = "Powers"),
-)
-val cardStore = mapOf<Int, Card>(
-    1 to Card(id = 1, number = "DE10101010101", customer = customerStore.get(1)!!, balance = 300.0),
-    2 to Card(id = 2, number = "DE20202020202", customer = customerStore.get(2)!!, balance = 200.0),
+
+val cardStore = mapOf<Long, Card>(
+    1111_1111_1111_1111 to Card(id = 1111_1111_1111_1111, pin = 1234, firstName="Jane", lastName="Doe", balance = 300.0),
+    2222_2222_2222_2222 to Card(id = 2222_2222_2222_2222, pin = 1234, firstName="John", lastName="Doe", balance = 200.0),
 )
 
-fun getCustomerCard(customer: Customer, cardStore: Map<Int, Card>): Card?? {
-    for (card in cardStore.values) {
-        if (card.customer == customer) {
-            return card
-        }
-    }
-    return null
-}
 
 fun Application.configureRouting() {
     routing {
         get("/") {
-            call.respondText("Hello World! ${customerStore.get(1)}, ${cardStore.get(2)}")
+            call.respondText("Hello World! ${cardStore.get(1111_1111_1111_1111)}")
         }
         get("/balance/{id}") {
-            val customerId = call.parameters["id"]?.toInt()
+            val cardNumber = call.parameters["id"]?.toLong()
             // if no id rerun empty
-            val customer = customerStore.get(customerId)
-            val card = getCustomerCard(customer!!, cardStore)
-            val balance = CustomerBalance(
-                firstName = customer.firstName,
-                lastName = customer.lastName,
-                cardNumber = card!!.number,
+            val card = cardStore.get(cardNumber)
+            val balance = CardBalance(
+                firstName = card!!.firstName,
+                lastName = card!!.lastName,
+                cardNumber = card!!.id,
                 balance = card!!.balance,
             )
             println(balance)
