@@ -36,14 +36,14 @@ fun Application.configureRouting() {
             // Test with:
             // curl -d '{"id":"1111111111111111", "pin":"1234"}' -H "Content-Type: application/json" -X POST http://0.0.0.0:8080/card-detail -v
 
-            val cardDetailRequest = call.receive<CardRequestDTO>()
-            val isValid = isCardPinValid(cardDetailRequest.id, cardDetailRequest.pin, cardStore)
+            val cardRequest = call.receive<CardRequestDTO>()
+            val isValid = isCardPinValid(cardRequest.id, cardRequest.pin, cardStore)
 
             if (!isValid) {
                 call.respond(HttpStatusCode.Unauthorized, ErrorCardResponseDTO("Invalid PIN or CardID."))
             }
             if (isValid) {
-                val card: Card? = cardStore[cardDetailRequest.id]
+                val card: Card? = cardStore[cardRequest.id]
                 val cardDetailResponse = CardDetailResponseDTO(card!!.id, card!!.firstName, card!!.lastName)
                 call.respond(HttpStatusCode.OK, cardDetailResponse)
             }
@@ -52,14 +52,14 @@ fun Application.configureRouting() {
             // Test with:
             // curl -d '{"id":"1111111111111111", "pin":"1234"}' -H "Content-Type: application/json" -X POST http://0.0.0.0:8080/card-balance -v
 
-            val cardDetailRequest = call.receive<CardRequestDTO>()
-            val isValid = isCardPinValid(cardDetailRequest.id, cardDetailRequest.pin, cardStore)
+            val cardRequest = call.receive<CardRequestDTO>()
+            val isValid = isCardPinValid(cardRequest.id, cardRequest.pin, cardStore)
 
             if (!isValid) {
                 call.respond(HttpStatusCode.Unauthorized, ErrorCardResponseDTO("Invalid PIN or CardID."))
             }
             if (isValid) {
-                val card: Card? = cardStore[cardDetailRequest.id]
+                val card: Card? = cardStore[cardRequest.id]
                 val cardBalanceResponse = CardBalanceResponseDTO(card!!.id, card!!.balance)
                 call.respond(HttpStatusCode.OK, cardBalanceResponse)
             }
