@@ -3,6 +3,8 @@ package com.example.plugins
 import com.example.dto.*
 import com.example.models.Card
 import com.example.services.isCardPinValid
+import com.example.services.isWithdrawCashPossible
+import com.example.services.withdrawCash
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -62,6 +64,30 @@ fun Application.configureRouting() {
                 val card: Card? = cardStore[cardRequest.id]
                 val cardBalanceResponse = CardBalanceResponseDTO(card!!.id, card!!.balance)
                 call.respond(HttpStatusCode.OK, cardBalanceResponse)
+            }
+        }
+        patch("/card-withdraw-cash") {
+            // Test with:
+            // curl -d '{"id":"1111111111111111", "pin":"1234", "cash":"100.0"}' -H "Content-Type: application/json" -X POST http://0.0.0.0:8080/card-withdraw-cash -v
+
+            val cardWithdrawCashRequest = call.receive<CardWithdrawCashRequestDTO>()
+            val isValid = isCardPinValid(cardWithdrawCashRequest.id, cardWithdrawCashRequest.pin, cardStore)
+
+            if (!isValid) {
+                call.respond(HttpStatusCode.Unauthorized, ErrorCardResponseDTO("Invalid PIN or CardID."))
+            }
+
+            val card: Card = cardStore[cardWithdrawCashRequest.id]!!
+            val canWithdraw = isWithdrawCashPossible(card, cardWithdrawCashRequest.cash)
+
+            if (!canWithdraw) {
+                call.respond(HttpStatusCode.BadRequest, ErrorCardResponseDTO("Could not withdraw requested amount. Balance too low."))
+            }
+
+            if (isValid and canWithdraw) {
+                val cash = withdrawCash(card, cardWithdrawCashRequest.cash)
+                val cardWithdrawCashResponse = CardWithdrawCashResponseDTO(card.id, card.balance, cash)
+                call.respond(HttpStatusCode.NoContent, cardWithdrawCashResponse)
             }
         }
     }

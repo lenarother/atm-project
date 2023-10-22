@@ -5,5 +5,5 @@ data class Card(
     val pin: Int,
     val firstName: String,
     val lastName: String,
-    val balance: Double,
+    var balance: Double,
 )

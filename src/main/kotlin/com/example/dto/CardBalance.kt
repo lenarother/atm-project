@@ -14,6 +14,14 @@ data class CardRequestDTO(
     val id: Long,
     val pin: Int,
 )
+
+@Serializable
+data class CardWithdrawCashRequestDTO(
+    val id: Long,
+    val pin: Int,
+    val cash: Double,
+)
+
 @Serializable
 data class ErrorCardResponseDTO(
     val message: String,
@@ -30,4 +38,12 @@ data class CardDetailResponseDTO(
 data class CardBalanceResponseDTO(
     val cardNumber: Long,
     val balance: Double,
+)
+
+
+@Serializable
+data class CardWithdrawCashResponseDTO(
+    val cardNumber: Long,
+    val balance: Double,
+    val cash: Double,
 )

@@ -10,3 +10,12 @@ fun isCardPinValid(cardId: Long, cardPin: Int, cardStore: Map<Long, Card>): Bool
         else -> false
     }
 }
+
+fun isWithdrawCashPossible(card: Card, cash: Double): Boolean {
+    return card.balance >= cash
+}
+
+fun withdrawCash(card: Card, cash: Double): Double {
+    card.balance -= cash
+    return cash
+}

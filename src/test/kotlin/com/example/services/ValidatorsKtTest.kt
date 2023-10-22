@@ -31,3 +31,32 @@ class ValidatorsKtTest {
         assertEquals(expected, result)
     }
 }
+
+class CanWithdrawKtTest {
+    @Test
+    fun testCanWithdraw() {
+        val expected = true
+        val card: Card = testCardStore.get(1111_1111_1111_1111)!!
+        val result = isWithdrawCashPossible(card, 300.0)
+        assertEquals(expected, result)
+    }
+    @Test
+    fun testCannotWithdraw() {
+        val expected = false
+        val card: Card = testCardStore.get(1111_1111_1111_1111)!!
+        val result = isWithdrawCashPossible(card, 301.0)
+        assertEquals(expected, result)
+    }
+}
+
+class WithdrawKtTest {
+    @Test
+    fun testWithdraw() {
+        val expected_cash: Double = 50.0
+        val expected_balance: Double = 250.0
+        val card: Card = testCardStore.get(1111_1111_1111_1111)!!
+        val result = withdrawCash(card, 50.0)
+        assertEquals(expected_cash, result, 0.0)
+        assertEquals(expected_balance, card.balance, 0.0)
+    }
+}
