@@ -16,12 +16,14 @@ class ValidatorsKtTest {
         val result = isCardPinValid(1111_1111_1111_1111, 1234, testCardStore)
         assertEquals(expected, result)
     }
+
     @Test
     fun testPinInvalid() {
         val expected = false
         val result = isCardPinValid(1111_1111_1111_1111, 5555, testCardStore)
         assertEquals(expected, result)
     }
+
     @Test
     fun testCardIdDoesNotExist() {
         val expected = false
