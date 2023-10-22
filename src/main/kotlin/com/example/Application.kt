@@ -16,6 +16,5 @@ fun Application.module() {
     install(ContentNegotiation) {
         json()
     }
-    //val n = "FooBar"
     configureRouting()
 }

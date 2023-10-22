@@ -2,6 +2,8 @@ package com.example.plugins
 
 import com.example.dto.CardBalance
 import com.example.dto.CardDetailRequestDTO
+import com.example.dto.CardDetailResponseDTO
+import com.example.dto.ErrorCardResponseDTO
 import com.example.models.Card
 import com.example.services.isCardPinValid
 import io.ktor.http.*
@@ -34,10 +36,20 @@ fun Application.configureRouting() {
             call.respond(balance)
         }
         post("/card-detail") {
-            // curl -d '{"id":"1111111111111111", "pin":"1234"}' -H "Content-Type: application/json" -X POST http://0.0.0.0:8080/card-detail
+            // Test with:
+            // curl -d '{"id":"1111111111111111", "pin":"1234"}' -H "Content-Type: application/json" -X POST http://0.0.0.0:8080/card-detail -v
+
             val cardDetailRequest = call.receive<CardDetailRequestDTO>()
             val isValid = isCardPinValid(cardDetailRequest.id, cardDetailRequest.pin, cardStore)
-            call.respondText("Is Valid: $isValid", status = HttpStatusCode.Created)
+
+            if (!isValid) {
+                call.respond(HttpStatusCode.Unauthorized, ErrorCardResponseDTO("Invalid PIN or CardID."))
+            }
+            if (isValid) {
+                val card: Card? = cardStore[cardDetailRequest.id]
+                val cardDetailResponse = CardDetailResponseDTO(card!!.id, card!!.firstName, card!!.lastName)
+                call.respond(HttpStatusCode.OK, cardDetailResponse)
+            }
         }
     }
 }

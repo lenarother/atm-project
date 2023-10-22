@@ -14,3 +14,15 @@ data class CardDetailRequestDTO(
     val id: Long,
     val pin: Int,
 )
+@Serializable
+data class ErrorCardResponseDTO(
+    val message: String,
+)
+
+@Serializable
+data class CardDetailResponseDTO(
+    val cardNumber: Long,
+    val firstName: String,
+    val lastName: String,
+)
+
