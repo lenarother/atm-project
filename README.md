@@ -1,5 +1,12 @@
 # ATM
 
+### Next TODOs:
+
+- refactor duplications
+- test for endpoints
+- generic response with <T>
+
+
 ### Assumptions:
 
 - You have a predefined account, registration or creation of account isn't needed
@@ -19,4 +26,4 @@
 - Prepare code structure
 - write your code the best way you can
 
-Thank you @uche-powers for preparing the challenge
+Thank you @uche-powers for the idea and collaboration on this one!
