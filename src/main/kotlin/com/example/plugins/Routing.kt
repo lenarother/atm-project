@@ -18,10 +18,17 @@ val cardStore = mapOf<Long, Card>(
 
 fun Application.configureRouting() {
     routing {
+        /**
+         * Card details : id (card number), first_name, last_name.
+         * Required data: id, pin.
+         *
+         * Test:
+         * curl
+         *     -d '{"id":"1111111111111111", "pin":"1234"}'
+         *     -H "Content-Type: application/json"
+         *     -X POST http://0.0.0.0:8080/card-detail -v
+         */
         post("/card-detail") {
-            // Test with:
-            // curl -d '{"id":"1111111111111111", "pin":"1234"}' -H "Content-Type: application/json" -X POST http://0.0.0.0:8080/card-detail -v
-
             val cardRequest = call.receive<CardRequestDTO>()
             val isValid = isCardPinValid(cardRequest.id, cardRequest.pin, cardStore)
 
@@ -34,10 +41,18 @@ fun Application.configureRouting() {
                 call.respond(HttpStatusCode.OK, cardDetailResponse)
             }
         }
-        post("/card-balance") {
-            // Test with:
-            // curl -d '{"id":"1111111111111111", "pin":"1234"}' -H "Content-Type: application/json" -X POST http://0.0.0.0:8080/card-balance -v
 
+        /**
+         * Card balance : id (card number), balance (available cash).
+         * Required data: id, pin.
+         *
+         * Test:
+         * curl
+         *     -d '{"id":"1111111111111111", "pin":"1234"}'
+         *     -H "Content-Type: application/json"
+         *     -X POST http://0.0.0.0:8080/card-balance -v
+         */
+        post("/card-balance") {
             val cardRequest = call.receive<CardRequestDTO>()
             val isValid = isCardPinValid(cardRequest.id, cardRequest.pin, cardStore)
 
@@ -50,10 +65,18 @@ fun Application.configureRouting() {
                 call.respond(HttpStatusCode.OK, cardBalanceResponse)
             }
         }
-        patch("/card-withdraw-cash") {
-            // Test with:
-            // curl -d '{"id":"1111111111111111", "pin":"1234", "cash":"100.0"}' -H "Content-Type: application/json" -X POST http://0.0.0.0:8080/card-withdraw-cash -v
 
+        /**
+         * Withdraw cash : id (card number), balance (available cash), cash (withdrawn cash).
+         * Required data: id, pin, cash.
+         *
+         * Test:
+         * curl
+         *     -d '{"id":"1111111111111111", "pin":"1234", "cash":"100.0"}'
+         *     -H "Content-Type: application/json"
+         *     -X PATCH http://0.0.0.0:8080/card-withdraw-cash -v
+         */
+        patch("/card-withdraw-cash") {
             val cardWithdrawCashRequest = call.receive<CardWithdrawCashRequestDTO>()
             val isValid = isCardPinValid(cardWithdrawCashRequest.id, cardWithdrawCashRequest.pin, cardStore)
 
