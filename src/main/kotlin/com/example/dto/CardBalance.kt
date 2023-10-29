@@ -15,6 +15,12 @@ data class CardWithdrawCashRequestDTO(
 )
 
 @Serializable
+data class CardResponseDTO<T>(
+    val message: String,
+    val body: T,
+)
+
+@Serializable
 data class ErrorCardResponseDTO(
     val message: String,
 )
