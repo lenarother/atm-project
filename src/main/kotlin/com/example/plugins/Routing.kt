@@ -19,6 +19,17 @@ val cardStore = mapOf<Long, Card>(
 fun Application.configureRouting() {
     routing {
         /**
+         * Root: welcome message.
+         * Required data: id, pin.
+         *
+         * Test:
+         * Open project in browser.
+         * curl http://0.0.0.0:8080/ -v
+         */
+        get("/") {
+            call.respondText("Welcome to ATM project!")
+        }
+        /**
          * Card details : id (card number), first_name, last_name.
          * Required data: id, pin.
          *
