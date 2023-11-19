@@ -5,8 +5,8 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 val testCardStore = mapOf<Long, Card>(
-    1111_1111_1111_1111 to Card(id = 1111_1111_1111_1111, pin = 1234, firstName = "Jane", lastName = "Doe", balance = 300.0),
-    2222_2222_2222_2222 to Card(id = 2222_2222_2222_2222, pin = 1234, firstName = "John", lastName = "Doe", balance = 200.0),
+    81111_1111_1111_1111 to Card(id = 1111_1111_1111_1111, pin = 1234, firstName = "Jane", lastName = "Doe", balance = 300.0),
+    82222_2222_2222_2222 to Card(id = 2222_2222_2222_2222, pin = 1234, firstName = "John", lastName = "Doe", balance = 200.0),
 )
 
 class ValidatorsKtTest {
@@ -40,6 +40,7 @@ class CanWithdrawKtTest {
         val result = isWithdrawCashPossible(card, 300.0)
         assertEquals(expected, result)
     }
+
     @Test
     fun testCannotWithdraw() {
         val expected = false
