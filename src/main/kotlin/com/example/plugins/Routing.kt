@@ -10,6 +10,7 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import main.kotlin.com.bank.PostBank
 
 val cardStore = mapOf<Long, Card>(
     1111_1111_1111_1111 to Card(id = 1111_1111_1111_1111, pin = 1234, firstName = "Jane", lastName = "Doe", balance = 300.0),
@@ -27,6 +28,8 @@ fun Application.configureRouting() {
          * curl http://0.0.0.0:8080/ -v
          */
         get("/") {
+            val bank = PostBank()
+            println(bank.salutation())
             call.respondText("Welcome to ATM project!")
         }
         /**
