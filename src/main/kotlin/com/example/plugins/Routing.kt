@@ -1,7 +1,9 @@
 package com.example.plugins
 
+import com.example.dao.DAOFacadeImpl
 import com.example.dto.*
 import com.example.models.Card
+import com.example.models.Cards
 import com.example.services.isCardPinValid
 import com.example.services.isWithdrawCashPossible
 import com.example.services.withdrawCash
@@ -11,11 +13,20 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import main.kotlin.com.bank.PostBank
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.transactions.transaction
 
 val cardStore = mapOf<Long, Card>(
     1111_1111_1111_1111 to Card(id = 1111_1111_1111_1111, pin = 1234, firstName = "Jane", lastName = "Doe", balance = 300.0),
     2222_2222_2222_2222 to Card(id = 2222_2222_2222_2222, pin = 1234, firstName = "John", lastName = "Doe", balance = 200.0),
 )
+
+fun initDb() {
+    // ...
+    transaction() {
+        SchemaUtils.create(Cards)
+    }
+}
 
 fun Application.configureRouting() {
     routing {
@@ -31,6 +42,19 @@ fun Application.configureRouting() {
             val bank = PostBank()
             println(bank.salutation())
             call.respondText("Welcome to ATM project!")
+        }
+        get("/card-all") {
+            val cards = DAOFacadeImpl().allCards().toString()
+            println(cards)
+            call.respondText("$cards")
+        }
+        post ("/card-create"){
+            val article = DAOFacadeImpl().addNewCard(
+                pin = 1234,
+                firstName = "John",
+                lastName = "Doe"
+            )
+            call.respondRedirect("/")
         }
         /**
          * Card details : id (card number), first_name, last_name.
