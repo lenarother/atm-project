@@ -46,9 +46,16 @@ fun Application.configureRouting() {
         get("/card-all") {
             val cards = DAOFacadeImpl().allCards().toString()
             println(cards)
+            //val dbName = environment.config.propertyOrNull("ktor.deployment.dbName")?.getString() ?: "foo"
+            //println("$dbName")
             call.respondText("$cards")
         }
-        post ("/card-create"){
+        /**
+         * This is just GET for testing reasons,
+         * to quickly generate data.
+         * No data required.
+         */
+        get ("/card-create"){
             val article = DAOFacadeImpl().addNewCard(
                 pin = 1234,
                 firstName = "John",
